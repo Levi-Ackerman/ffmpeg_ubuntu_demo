@@ -8,14 +8,20 @@ set(ffmpeg_dir /opt/ffmpeg)
 
 include_directories(${ffmpeg_header_dir}/include)
 
-add_library(avutil
-        SHARED
-        IMPORTED)
+#add_library(avutil
+#        SHARED
+#        IMPORTED)
 
-set_target_properties(avutil
-        PROPERTIES IMPORTED_LOCATION
-        ${ffmpeg_dir}/lib/libavutil.so)
+#set_target_properties(avutil
+#        PROPERTIES IMPORTED_LOCATION
+#        ${ffmpeg_dir}/lib/libavutil.so)
 
-link_libraries(avutil)
+find_library(avutil
+        avutil)
+
+find_library(avformat
+        avformat)
+
+link_libraries(avutil avformat)
 
 add_executable(CDemo main.c)
