@@ -24,4 +24,4 @@ find_library(avformat
 
 link_libraries(avutil avformat)
 
-add_executable(CDemo main.c)
+add_executable(CDemo main.c video.c)

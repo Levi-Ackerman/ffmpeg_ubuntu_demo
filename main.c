@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "main.h"
+#include "video/video.h"
 #include "libavutil/log.h"
 #include "libavformat/avformat.h"
 
@@ -10,8 +11,7 @@ int main() {
     av_log_set_level(AV_LOG_DEBUG);
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
 
-    av_ls("../test_dir");
-
+    read_video_info("../test_dir/test.mp4");
     return 0;
 }
 
