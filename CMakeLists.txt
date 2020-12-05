@@ -22,6 +22,12 @@ find_library(avutil
 find_library(avformat
         avformat)
 
-link_libraries(avutil avformat)
+find_library(avcodec
+        avcodec
+)
 
-add_executable(CDemo main.c video.c)
+link_libraries(avutil avformat avcodec)
+
+#aux_source_directory(src ./src)
+
+add_executable(CDemo src/video.c src/main.c)

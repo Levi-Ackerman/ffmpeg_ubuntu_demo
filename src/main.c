@@ -1,17 +1,38 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "main.h"
+#include <string.h>
 #include "video/video.h"
 #include "libavutil/log.h"
 #include "libavformat/avformat.h"
 
 #define null NULL
 
+#define PROJECT_HOME "/home/lee/CProj"
+
 int main() {
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_set_level(AV_LOG_INFO);
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
 
-    read_video_info("../test_dir/test.mp4");
+    const char* sub_name = "/test_dir/test2.mp4";
+    const int home_len = strlen(PROJECT_HOME);
+    const int sub_len = strlen(sub_name);
+    const int len = home_len + sub_len + 1;
+    char* video_file = (char*)malloc(sizeof(char) * len);
+    memset(video_file, 0, len);
+    memcpy(video_file, PROJECT_HOME, home_len);
+    memcpy(video_file + home_len, sub_name, sub_len);
+
+//    printf("%s",video_file);
+
+    //读取多媒体文件里的信息
+//    read_video_info("..");
+
+//    av_ls("..");
+
+    //抽取音频信息到文件
+    extra_audio(video_file);
     return 0;
 }
 
