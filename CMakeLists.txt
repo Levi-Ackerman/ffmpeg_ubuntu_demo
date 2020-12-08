@@ -16,6 +16,8 @@ include_directories(${ffmpeg_header_dir}/include)
 #        PROPERTIES IMPORTED_LOCATION
 #        ${ffmpeg_dir}/lib/libavutil.so)
 
+link_directories(${ffmpeg_dir}/lib)
+
 find_library(avutil
         avutil)
 
@@ -26,7 +28,15 @@ find_library(avcodec
         avcodec
 )
 
-link_libraries(avutil avformat avcodec)
+find_library(avfilter
+        avfilter
+        )
+
+find_library(avdevice
+        avdevice
+        )
+
+link_libraries(avutil avformat avcodec avfilter avdevice)
 
 #aux_source_directory(src ./src)
 

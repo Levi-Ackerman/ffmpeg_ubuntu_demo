@@ -15,7 +15,7 @@ int main() {
     av_log_set_level(AV_LOG_INFO);
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
 
-    const char* sub_name = "/test_dir/test2.mp4";
+    const char* sub_name = "/test_dir/trailer.mp4";
     const int home_len = strlen(PROJECT_HOME);
     const int sub_len = strlen(sub_name);
     const int len = home_len + sub_len + 1;
@@ -32,7 +32,7 @@ int main() {
 //    av_ls("..");
 
     //抽取音频信息到文件
-    extra_audio(video_file);
+    extra_video(video_file);
     return 0;
 }
 

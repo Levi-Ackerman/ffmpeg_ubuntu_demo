@@ -6,9 +6,12 @@
 #define CDEMO_VIDEO_H
 
 #include "libavformat/avformat.h"
+#include "libavcodec/avcodec.h"
 
 void read_video_info(char *file_name);
 
 void extra_audio(char* file_name);
+
+void extra_video(char* file_name);
 
 #endif //CDEMO_VIDEO_H
