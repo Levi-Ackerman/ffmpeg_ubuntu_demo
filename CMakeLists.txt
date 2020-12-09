@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
-project(CDemo C)
+project(CDemo)
 
 set(CMAKE_C_STANDARD 11)
 
@@ -38,6 +38,10 @@ find_library(avdevice
 
 link_libraries(avutil avformat avcodec avfilter avdevice)
 
+FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
+
+#message(hello_${SRC_C_FILES})
+
 #aux_source_directory(src ./src)
 
-add_executable(CDemo src/video.c src/main.c)
+add_executable(${PROJECT_NAME} ${SRC_C_FILES})

@@ -104,10 +104,12 @@ void extra_video(char *file_name) {
     int ret = avformat_open_input(&context, file_name, NULL, NULL);
     if (ret < 0){
         av_log(NULL, AV_LOG_INFO,"open video file fail: %s\n", av_err2str(ret));
+        goto __fail;
     }
     ret = avformat_find_stream_info(context, NULL);
     if (ret < 0){
         av_log(NULL, AV_LOG_INFO,"find stream info fail: %s\n", av_err2str(ret));
+        goto __fail;
     }
 //    av_dump_format(context, 0, file_name, 0);
     if (ret < 0) {
