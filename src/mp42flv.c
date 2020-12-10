@@ -61,12 +61,13 @@ void mp4file2flv(char* in_mp4_file, char* out_flv_file){
         }
         //输出文件中创建流
         if (extra_stream_indexs[i] >= 0){
+            //在out context 中新加一路流，因为在同一次循环，所以这路流的index会等于extra_stream_indexs[i]的值
             AVStream *stream = avformat_new_stream(out_ctx, NULL);
             if (!stream){
                 av_log(NULL, AV_LOG_WARNING, "create stream for out file fail \n");
                 goto __fail;
             }
-            //复制编解码参数
+            //复制编解码参数，具体的实现是深拷贝extradata和extradata_size
             ret = avcodec_parameters_copy(stream->codecpar, in_params);
             if (ret < 0){
                 av_log(NULL, AV_LOG_WARNING, "copy codec parameters fail :%s\n", av_err2str(ret));
