@@ -5,19 +5,30 @@
 #include <string.h>
 #include "video/video.h"
 #include "video/mp42flv.h"
+#include "video/video_cut.h"
 #include "libavutil/log.h"
 #include "libavformat/avformat.h"
+#include "test.c"
 
 #define null NULL
 
 #define INPUT_MP4_FILE      "/home/lee/CProj/test_dir/marvel.mp4"
+#define OUTPUT_CUT_MP4_FILE "/home/lee/CProj/marvel.cut.flv"
 #define OUTPUT_FLV_FILE     "/home/lee/CProj/marvel.flv"
 
 int main() {
     av_log_set_level(AV_LOG_INFO);
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
+//
+//    test();
 
-    mp4file2flv(INPUT_MP4_FILE, OUTPUT_FLV_FILE);
+    float video_seconds = get_video_seconds(INPUT_MP4_FILE);
+    if (video_seconds < 0){
+        av_log(NULL, AV_LOG_ERROR, "get video time length errror:%s\n", av_err2str(video_seconds));
+    }else {
+        video_cut(INPUT_MP4_FILE, OUTPUT_CUT_MP4_FILE, (int) video_seconds / 2, (int) video_seconds);
+    }
+//    mp4file2flv(INPUT_MP4_FILE, OUTPUT_FLV_FILE);
 
 //    printf("%s",video_file);
 

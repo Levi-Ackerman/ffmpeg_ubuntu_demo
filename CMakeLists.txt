@@ -44,4 +44,4 @@ FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
 
 #aux_source_directory(src ./src)
 
-add_executable(${PROJECT_NAME} ${SRC_C_FILES})
+add_executable(${PROJECT_NAME} ${SRC_C_FILES} include/common.h)
