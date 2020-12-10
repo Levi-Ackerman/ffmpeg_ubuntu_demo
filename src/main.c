@@ -8,7 +8,6 @@
 #include "video/video_cut.h"
 #include "libavutil/log.h"
 #include "libavformat/avformat.h"
-#include "test.c"
 
 #define null NULL
 
@@ -19,8 +18,6 @@
 int main() {
     av_log_set_level(AV_LOG_INFO);
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
-//
-//    test();
 
     float video_seconds = get_video_seconds(INPUT_MP4_FILE);
     if (video_seconds < 0){

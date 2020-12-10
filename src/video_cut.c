@@ -1,5 +1,7 @@
 #include "video/video_cut.h"
 #include "libavformat/avformat.h"
+#include "libavcodec/avcodec.h"
+#include "libavutil/avutil.h"
 #include "common.h"
 
 void video_cut(char *in_file, char *out_file, int from_second, int to_second) {
@@ -25,6 +27,7 @@ void video_cut(char *in_file, char *out_file, int from_second, int to_second) {
     avcodec_parameters_copy(out_stream->codecpar, in_stream->codecpar);
     out_stream->codecpar->codec_tag = 0;
 
+    //写入头文件后，out_stream的time_base就被赋值了
     avformat_write_header(out_ctx, NULL);
 
     av_init_packet(&packet);

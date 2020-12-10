@@ -3,10 +3,10 @@ project(CDemo)
 
 set(CMAKE_C_STANDARD 11)
 
-set(ffmpeg_header_dir ${CMAKE_SOURCE_DIR})
 set(ffmpeg_dir /opt/ffmpeg)
 
-include_directories(${ffmpeg_header_dir}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/ffmpeg
+        ${CMAKE_SOURCE_DIR}/include/custom)
 
 #add_library(avutil
 #        SHARED
@@ -26,7 +26,7 @@ find_library(avformat
 
 find_library(avcodec
         avcodec
-)
+        )
 
 find_library(avfilter
         avfilter
@@ -44,4 +44,4 @@ FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
 
 #aux_source_directory(src ./src)
 
-add_executable(${PROJECT_NAME} ${SRC_C_FILES} include/common.h)
+add_executable(${PROJECT_NAME} ${SRC_C_FILES})
