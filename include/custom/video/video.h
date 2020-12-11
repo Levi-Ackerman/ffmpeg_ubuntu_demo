@@ -12,6 +12,6 @@ void read_video_info(char *file_name);
 
 void extra_audio(char* file_name);
 
-void extra_video(char* file_name);
+void extra_video(char *file_name, char* );
 
 #endif //CDEMO_VIDEO_H

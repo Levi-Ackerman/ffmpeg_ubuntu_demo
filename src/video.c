@@ -95,12 +95,12 @@ void extra_audio(char *file_name) {
  * 循环读取AVPacket，每个packet的data前插入startCode， 关键帧的packet前还要插入pps和sps
  * @param file_name
  */
-void extra_video(char *file_name) {
+void extra_video(char *file_name, char* out_h264_file) {
     av_register_all();
     avformat_network_init();
     AVFormatContext *context = NULL;
     AVPacket packet;
-    FILE *file_h264 = fopen("../trailer.h264", "wb");
+    FILE *file_h264 = fopen(out_h264_file, "wb");
     int ret = avformat_open_input(&context, file_name, NULL, NULL);
     if (ret < 0){
         av_log(NULL, AV_LOG_INFO,"open video file fail: %s\n", av_err2str(ret));

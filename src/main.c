@@ -8,23 +8,28 @@
 #include "video/video_cut.h"
 #include "libavutil/log.h"
 #include "libavformat/avformat.h"
+#include "codec/decoder.h"
 
 #define null NULL
 
 #define INPUT_MP4_FILE      "/home/lee/CProj/test_dir/marvel.mp4"
 #define OUTPUT_CUT_MP4_FILE "/home/lee/CProj/marvel.cut.flv"
+#define OUTPUT_H264_FILE "/home/lee/CProj/marvel.h264"
 #define OUTPUT_FLV_FILE     "/home/lee/CProj/marvel.flv"
+#define OUTPUT_YUV_FILE     "/home/lee/CProj/marvel.yuv"
 
 int main() {
     av_log_set_level(AV_LOG_INFO);
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
 
-    float video_seconds = get_video_seconds(INPUT_MP4_FILE);
-    if (video_seconds < 0){
-        av_log(NULL, AV_LOG_ERROR, "get video time length errror:%s\n", av_err2str(video_seconds));
-    }else {
-        video_cut(INPUT_MP4_FILE, OUTPUT_CUT_MP4_FILE, (int) video_seconds / 2, (int) video_seconds);
-    }
+    decode_video(INPUT_MP4_FILE, OUTPUT_YUV_FILE);
+
+//    float video_seconds = get_video_seconds(INPUT_MP4_FILE);
+//    if (video_seconds < 0){
+//        av_log(NULL, AV_LOG_ERROR, "get video time length errror:%s\n", av_err2str(video_seconds));
+//    }else {
+//        video_cut(INPUT_MP4_FILE, OUTPUT_CUT_MP4_FILE, (int) video_seconds / 2, (int) video_seconds);
+//    }
 //    mp4file2flv(INPUT_MP4_FILE, OUTPUT_FLV_FILE);
 
 //    printf("%s",video_file);
@@ -35,7 +40,8 @@ int main() {
 //    av_ls("..");
 
     //抽取音频信息到文件
-//    extra_video(INPUT_MP4_FILE);
+//    extra_video(INPUT_MP4_FILE, OUTPUT_H264_FILE);
+    printf("program end with no error.\n");
     return 0;
 }
 
