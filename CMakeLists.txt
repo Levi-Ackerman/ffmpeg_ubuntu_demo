@@ -6,7 +6,9 @@ set(CMAKE_C_STANDARD 11)
 set(ffmpeg_dir /opt/ffmpeg)
 
 include_directories(${CMAKE_SOURCE_DIR}/include/ffmpeg
-        ${CMAKE_SOURCE_DIR}/include/custom)
+        ${CMAKE_SOURCE_DIR}/include/custom
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/src)
 
 #add_library(avutil
 #        SHARED
@@ -38,9 +40,9 @@ link_directories(${ffmpeg_dir}/lib)
 #find_library(sdl2
 #        SDL2)
 
-link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale)
+link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale swresample postproc)
 
-FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c)
+FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c ${CMAKE_SOURCE_DIR}/src/player/*.cpp)
 
 FILE(GLOB SRC_CPP_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 #

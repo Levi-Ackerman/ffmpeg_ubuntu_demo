@@ -19,7 +19,7 @@
 #define OUTPUT_FLV_FILE     "/home/lee/CProj/marvel.flv"
 #define OUTPUT_YUV_FILE     "/home/lee/CProj/marvel.yuv"
 
-int main() {
+int main1() {
     av_log_set_level(AV_LOG_INFO);
 #ifdef __cplusplus
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");

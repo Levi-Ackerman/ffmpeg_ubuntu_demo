@@ -37,6 +37,9 @@ void decode_video(char *input_file, char* fp_out) {
     FILE *dst_f_yuv = fopen(fp_out, "wb");
 
     while (av_read_frame(fmt_ctx, &avPacket) == 0){
+        if (avPacket.stream_index != video_index){
+            continue;
+        }
         if(0 != avcodec_send_packet(codec_ctx, &avPacket)){
 
         }else {
