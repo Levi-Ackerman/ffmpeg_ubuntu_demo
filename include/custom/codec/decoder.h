@@ -5,6 +5,6 @@
 #ifndef CDEMO_DECODER_H
 #define CDEMO_DECODER_H
 
-void decode_video(char *input_file, char* out_yuv_file);
+void decode_video(char *input_file, char* fp_out);
 
 #endif //CDEMO_DECODER_H

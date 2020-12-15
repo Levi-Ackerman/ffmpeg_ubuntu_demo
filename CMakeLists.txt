@@ -18,30 +18,38 @@ include_directories(${CMAKE_SOURCE_DIR}/include/ffmpeg
 
 link_directories(${ffmpeg_dir}/lib)
 
-find_library(avutil
-        avutil)
+#find_library(avutil
+#        avutil)
+#
+#find_library(avformat
+#        avformat)
+#
+#find_library(avcodec
+#        avcodec
+#        )
+#
+#find_library(avfilter
+#        avfilter
+#        )
+#
+#find_library(avdevice
+#        avdevice
+#        )
+#find_library(sdl2
+#        SDL2)
 
-find_library(avformat
-        avformat)
+link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale)
 
-find_library(avcodec
-        avcodec
-        )
+FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c)
 
-find_library(avfilter
-        avfilter
-        )
-
-find_library(avdevice
-        avdevice
-        )
-
-link_libraries(avutil avformat avcodec avfilter avdevice)
-
-FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c)
+FILE(GLOB SRC_CPP_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
+#
+#aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_DIR)
+#
+#add_subdirectory(${CMAKE_SOURCE_DIR}/src/sdl)
 
 #message(hello_${SRC_C_FILES})
 
 #aux_source_directory(src ./src)
 
-add_executable(${PROJECT_NAME} ${SRC_C_FILES})
+add_executable(${PROJECT_NAME} ${SRC_C_FILES} ${SRC_CPP_FILES})

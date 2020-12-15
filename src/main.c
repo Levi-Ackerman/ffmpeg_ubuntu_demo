@@ -9,6 +9,7 @@
 #include "libavutil/log.h"
 #include "libavformat/avformat.h"
 #include "codec/decoder.h"
+#include "sdl/sdl.h"
 
 #define null NULL
 
@@ -20,9 +21,14 @@
 
 int main() {
     av_log_set_level(AV_LOG_INFO);
+#ifdef __cplusplus
     av_log(NULL, AV_LOG_INFO, "hello %s\n", "ffmpeg");
+#endif
 
     decode_video(INPUT_MP4_FILE, OUTPUT_YUV_FILE);
+//    sdl_event_handle();
+
+//    decode_video(INPUT_MP4_FILE, OUTPUT_YUV_FILE);
 
 //    float video_seconds = get_video_seconds(INPUT_MP4_FILE);
 //    if (video_seconds < 0){
