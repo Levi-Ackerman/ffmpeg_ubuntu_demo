@@ -10,7 +10,9 @@ extern "C" {
 #include "SDL2/SDL.h"
 #include "libswscale/swscale.h"
 #include "libavutil/imgutils.h"
-};
+#include "stdio.h"
+#include "time.h"
+}
 
 class CPlayer {
 private:
@@ -21,6 +23,7 @@ private:
     SDL_Renderer *sdl_render;
     AVStream *video_stream;
     AVCodec *codec;
+    int64_t frame_interval_ms; //帧间间隔
 public:
     CPlayer(const char *mp4_file);
 

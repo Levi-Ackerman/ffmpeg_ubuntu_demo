@@ -4,13 +4,20 @@
 
 #include "CPlayer.h"
 
+#define SDL_RENDEREVENT SDL_USEREVENT +1
+#define log(...) printf(__VA_ARGS__)
+
+SDL_Event *SDL_EVENT_RENDER ;
+
 CPlayer::CPlayer(const char *mp4_file) {
+    SDL_EVENT_RENDER = new SDL_Event;
+    SDL_EVENT_RENDER->type = SDL_RENDEREVENT;
     this->mp4_file = mp4_file;
     prepare();
 }
 
 CPlayer::~CPlayer() {
-
+    delete SDL_EVENT_RENDER;
 }
 
 void CPlayer::destroy() {
@@ -41,6 +48,13 @@ void CPlayer::prepare() {
     this->sdl_window = SDL_CreateWindow("Player", 0,0, parameters->width, parameters->height, SDL_WINDOW_SHOWN);
     this->sdl_render = SDL_CreateRenderer(this->sdl_window, -1, 0);
 //    SDL_RenderPresent(sdl_render);
+
+    frame_interval_ms = 1000 /(this->video_stream->avg_frame_rate.num / this->video_stream->avg_frame_rate.den );
+    printf("frame interval ms: %ld", frame_interval_ms);
+}
+
+void send_render_event(){
+    SDL_PushEvent(SDL_EVENT_RENDER);
 }
 
 void CPlayer::play() {
@@ -57,27 +71,51 @@ void CPlayer::play() {
     auto sws_ctx = sws_getContext(codec_ctx->width, codec_ctx->height, codec_ctx->pix_fmt, codec_ctx->width, codec_ctx->height, AV_PIX_FMT_YUV420P, 0,NULL,NULL,NULL);
     AVPacket *packet = av_packet_alloc();
     av_init_packet(packet);
-    while (av_read_frame(this->fmt_ctx, packet) == 0) {
-        if (packet->stream_index == video_stream->index) {
-            avcodec_send_packet(this->codec_ctx, packet);
-            if (0 == avcodec_receive_frame(this->codec_ctx, origin_frame)) {
-                //格式转换,srcSliceY表示要转换的高度的起点，srcSliceH表示要转换的高度，如果要转换整帧，那这两个值就分别是0和整帧高度
-                int out_height = sws_scale(sws_ctx, origin_frame->data, origin_frame->linesize, 0, codec_ctx->height,
-                          yuv_frame->data, yuv_frame->linesize);
-                if (out_height == 0){
+    SDL_Event event;
+    int64_t last_render_ms = 0;
+    send_render_event();
+    int quit = 0;
+    while (!quit) {
+        SDL_WaitEvent(&event);
+        switch (event.type) {
+            case SDL_QUIT:
+                quit = 1;
+                break;
+            case SDL_RENDEREVENT:
+                if (av_read_frame(this->fmt_ctx, packet) != 0) {
                     continue;
                 }
-                //根据前面的分配，其实yuv_frame->data[0]指针就是out_buffer指针，都是整个帧的内存
-                //linesize[0]是Y分量的长度，Y分量和整帧的长度是一致的
-                SDL_UpdateTexture(texture, &sdlRect, yuv_frame->data[0], yuv_frame->linesize[0]);
-                SDL_RenderClear(sdl_render);
-                SDL_RenderCopy(sdl_render, texture, &sdlRect,NULL);
-                SDL_RenderPresent(sdl_render);
-            }
+                if (packet->stream_index == video_stream->index) {
+                    avcodec_send_packet(this->codec_ctx, packet);
+                    if (0 == avcodec_receive_frame(this->codec_ctx, origin_frame)) {
+                        //格式转换,srcSliceY表示要转换的高度的起点，srcSliceH表示要转换的高度，如果要转换整帧，那这两个值就分别是0和整帧高度
+                        int out_height = sws_scale(sws_ctx, origin_frame->data, origin_frame->linesize, 0,
+                                                   codec_ctx->height,
+                                                   yuv_frame->data, yuv_frame->linesize);
+                        if (out_height == 0) {
+                            continue;
+                        }
+                        //根据前面的分配，其实yuv_frame->data[0]指针就是out_buffer指针，都是整个帧的内存
+                        //linesize[0]是Y分量的长度，Y分量和整帧的长度是一致的
+                        SDL_UpdateTexture(texture, &sdlRect, yuv_frame->data[0], yuv_frame->linesize[0]);
+                        SDL_RenderClear(sdl_render);
+                        SDL_RenderCopy(sdl_render, texture, &sdlRect, NULL);
+                        const int64_t now_ms = 1000 * clock() / CLOCKS_PER_SEC;
+                        const int64_t interval_ms = now_ms - last_render_ms;
+                        if (interval_ms < frame_interval_ms){
+                            //距离上一帧渲染还没有超过帧间隔，等待
+                            SDL_Delay(frame_interval_ms - interval_ms);
+                        }
+                        SDL_RenderPresent(sdl_render);
+                        last_render_ms = 1000 * clock() / CLOCKS_PER_SEC;
+                    }
+                }
+                send_render_event();
+                break;
         }
     }
     av_packet_free(&packet);
-//    av_frame_free(&yuv_frame);
-//    av_frame_free(&origin_frame);
+    av_frame_free(&yuv_frame);
+    av_frame_free(&origin_frame);
     SDL_DestroyTexture(texture);
 }
