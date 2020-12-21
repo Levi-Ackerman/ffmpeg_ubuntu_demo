@@ -42,9 +42,9 @@ link_directories(${ffmpeg_dir}/lib)
 
 link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale swresample postproc)
 
-FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c ${CMAKE_SOURCE_DIR}/src/player/*.cpp)
+FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c)
 
-FILE(GLOB SRC_CPP_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
+FILE(GLOB SRC_CPP_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/player/*.cpp)
 #
 #aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_DIR)
 #
