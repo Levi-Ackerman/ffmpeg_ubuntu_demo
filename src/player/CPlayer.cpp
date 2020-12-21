@@ -9,7 +9,20 @@
 
 SDL_Event *SDL_EVENT_RENDER ;
 
+int SDLCALL thread_decode_impl(void* args){
+    log("decode thread is running\n");
+    return 0 ;
+}
+
 CPlayer::CPlayer(const char *mp4_file) {
+    auto thread = SDL_CreateThread(thread_decode_impl, "cplayer_thread_decode", nullptr);
+    if(thread == nullptr){
+        log("线程创建失败\n");
+    }else{
+        log("线程创建成功\n");
+        SDL_WaitThread(thread, NULL);
+    }
+
     SDL_EVENT_RENDER = new SDL_Event;
     SDL_EVENT_RENDER->type = SDL_RENDEREVENT;
     this->mp4_file = mp4_file;

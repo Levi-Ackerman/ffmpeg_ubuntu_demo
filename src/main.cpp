@@ -12,6 +12,8 @@ int main(int argc, char** args){
 #endif
     auto *player = new CPlayer(INPUT_MP4_FILE);
     player->play();
+    player->destroy();
+    delete player;
 //    getchar();
     return 0;
 }
