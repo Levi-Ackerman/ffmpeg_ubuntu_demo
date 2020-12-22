@@ -4,7 +4,7 @@
 
 #include "CDecoder.h"
 
-CDecoder::CDecoder(char *input_file, func_decode_frame callback) {
+CDecoder::CDecoder(const char *input_file, CDecodeFrameCallback* callback) {
     this->m_callback = callback;
     this->m_input_file_name = input_file;
 }
@@ -50,7 +50,7 @@ void CDecoder::start() {
             if (avcodec_receive_frame(codec_ctx, frame) == 0) {
                 int out_height = sws_scale(swsContext,frame->data, frame->linesize,0,frame->height,yuv_frame->data,yuv_frame->linesize);
                 if (out_height >0){
-                    this->m_callback(yuv_frame);
+                    this->m_callback->on_frame_decode(yuv_frame);
                 }
             }
         }

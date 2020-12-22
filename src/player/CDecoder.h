@@ -14,15 +14,14 @@ extern "C"{
 
 #include <list>
 #include <string>
-
-typedef void (*func_decode_frame)(AVFrame* frame);
+#include "CDecodeFrameCallabck.h"
 
 class CDecoder {
 private:
-    func_decode_frame m_callback;
-    char* m_input_file_name;
+    CDecodeFrameCallback* m_callback;
+    const char* m_input_file_name;
 public:
-    CDecoder(char*  input_file, func_decode_frame callback);
+    CDecoder(const char*  input_file, CDecodeFrameCallback* callback);
     ~CDecoder();
     void start();
 };

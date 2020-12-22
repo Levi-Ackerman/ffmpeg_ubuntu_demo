@@ -10,30 +10,34 @@ extern "C" {
 #include "SDL2/SDL.h"
 #include "libswscale/swscale.h"
 #include "libavutil/imgutils.h"
-#include "stdio.h"
-#include "time.h"
+#include <cstdio>
+#include <ctime>
+#include <unistd.h>
 }
 
-class CPlayer {
+#include "CDisplayer.h"
+#include "CDecoder.h"
+#include "CDecodeFrameCallabck.h"
+
+class CPlayer : public CDecodeFrameCallback{
 private:
-    const char *mp4_file;
-    AVFormatContext *fmt_ctx;
-    AVCodecContext *codec_ctx;
-    SDL_Window *sdl_window;
-    SDL_Renderer *sdl_render;
-    AVStream *video_stream;
-    AVCodec *codec;
-    int64_t frame_interval_ms; //帧间间隔
+    const char *m_mp4_file;
+    int m_width, m_height;
+    int64_t m_frame_interval_ms; //帧间间隔
+
+private:
+    CDisplayer* m_displayer;
+    CDecoder* m_decoder;
+
 public:
     CPlayer(const char *mp4_file);
 
+    void play();
+
     ~CPlayer();
 
-    void prepare();
+    void on_frame_decode(AVFrame *frame) override;
 
-    void destroy();
-
-    void play();
 };
 
 
