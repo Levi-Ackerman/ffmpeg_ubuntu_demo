@@ -44,10 +44,12 @@ void CDecoder::start() {
     av_image_fill_arrays(yuv_frame->data, yuv_frame->linesize, out_buf,AV_PIX_FMT_YUV420P,video_param->width, video_param->height,1);
 
     av_init_packet(packet);
+    int frame_index = 0;
     while (av_read_frame(fmt_ctx, packet) == 0) {
         if (packet->stream_index == video_stream_index) {
             avcodec_send_packet(codec_ctx, packet);
             if (avcodec_receive_frame(codec_ctx, frame) == 0) {
+                av_frame_copy_props(yuv_frame, frame);
                 int out_height = sws_scale(swsContext,frame->data, frame->linesize,0,frame->height,yuv_frame->data,yuv_frame->linesize);
                 if (out_height >0){
                     this->m_callback->on_frame_decode(yuv_frame);

@@ -14,6 +14,7 @@ CPlayer::CPlayer(const char *mp4_file) {
     AVCodecParameters *video_parameters = ctx->streams[video_index]->codecpar;
     this->m_width = video_parameters->width;
     this->m_height = video_parameters->height;
+    this->m_time_base_d = av_q2d(ctx->streams[video_index]->time_base);
     this->m_displayer = new CDisplayer;
     this->m_displayer->init_window(m_width,m_height);
     this->m_decoder = new CDecoder(mp4_file, this);
@@ -21,6 +22,7 @@ CPlayer::CPlayer(const char *mp4_file) {
 }
 
 void CPlayer::on_frame_decode(AVFrame *frame) {
+    printf("present time: %lfs\n", frame->pts * this->m_time_base_d);
     this->m_displayer->update_frame(frame);
 }
 
