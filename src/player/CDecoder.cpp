@@ -66,6 +66,7 @@ void CDecoder::start() {
             }
         }else{
             this->m_callback(FINISH_FRAME);
+            break;
         }
     }
 
