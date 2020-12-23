@@ -8,9 +8,12 @@
 
 extern "C" {
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_events.h"
 #include "libavcodec/avcodec.h"
 };
 
+#include <functional>
+#include <thread>
 
 class CDisplayer {
 private:
@@ -20,12 +23,13 @@ private:
     SDL_Renderer *m_render;
     SDL_Texture *m_texture;
     SDL_Rect *m_rect;
+    std::function<void()> m_func_close_event_callback;
 public:
     CDisplayer();
 
     ~CDisplayer();
 
-    void init_window(int width, int height);
+    void init_window(int width, int height, std::function<void()>);
 
     void update_frame(AVFrame* frame);
 
