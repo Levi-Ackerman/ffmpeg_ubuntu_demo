@@ -16,15 +16,19 @@ extern "C" {
 #include <unistd.h>
 }
 
+#include <list>
 #include "CDisplayer.h"
 #include "CDecoder.h"
-#include "CDecodeFrameCallabck.h"
+#include <thread>
 
-class CPlayer : public CDecodeFrameCallback{
+class CPlayer {
+private:
+    const int FRAME_CACHE_MAX_LENGTH = 16;
 private:
     const char *m_mp4_file;
     int m_width, m_height;
     double m_time_base_d; //双精度化的时间基
+    double m_frame_interval_ms; //帧间间隔ms
 
 private:
     CDisplayer* m_displayer;
@@ -37,7 +41,7 @@ public:
 
     ~CPlayer();
 
-    virtual void on_frame_decode(AVFrame *frame) override;
+    void on_frame_decode(AVFrame *frame);
 
 };
 

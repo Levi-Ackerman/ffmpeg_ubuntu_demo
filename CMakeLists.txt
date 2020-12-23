@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.4.1)
 project(CDemo)
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS -std=c++11)
 
 set(ffmpeg_dir /opt/ffmpeg)
 
@@ -40,7 +42,7 @@ link_directories(${ffmpeg_dir}/lib)
 #find_library(sdl2
 #        SDL2)
 
-link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale swresample postproc)
+link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale swresample postproc pthread)
 
 FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c)
 

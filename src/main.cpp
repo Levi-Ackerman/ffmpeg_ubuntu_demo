@@ -5,18 +5,19 @@
 #include "player/CPlayer.h"
 #include "player/CDecoder.h"
 #include "player/CDisplayer.h"
+#include <thread>
 
 #define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
 
 int count = 0;
 
-void callback(AVFrame* frame){
-    printf("callback %d\n", count++);
+void callback(int i){
+    printf("start\n");
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    printf("end\n");
 }
 
 int main(int argc, char** args){
-//    CDecoder decoder(INPUT_MP4_FILE, callback);
-//    decoder.start();
     CPlayer player(INPUT_MP4_FILE);
     player.play();
     getchar();

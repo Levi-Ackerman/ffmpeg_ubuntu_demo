@@ -4,7 +4,7 @@
 
 #include "CDecoder.h"
 
-CDecoder::CDecoder(const char *input_file, CDecodeFrameCallback* callback) {
+CDecoder::CDecoder(const char *input_file, std::function<void(AVFrame*)> callback) {
     this->m_callback = callback;
     this->m_input_file_name = input_file;
 }
@@ -52,7 +52,7 @@ void CDecoder::start() {
                 av_frame_copy_props(yuv_frame, frame);
                 int out_height = sws_scale(swsContext,frame->data, frame->linesize,0,frame->height,yuv_frame->data,yuv_frame->linesize);
                 if (out_height >0){
-                    this->m_callback->on_frame_decode(yuv_frame);
+                    this->m_callback(yuv_frame);
                 }
             }
         }

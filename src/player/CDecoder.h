@@ -14,14 +14,14 @@ extern "C"{
 
 #include <list>
 #include <string>
-#include "CDecodeFrameCallabck.h"
+#include <functional>
 
 class CDecoder {
 private:
-    CDecodeFrameCallback* m_callback;
+    std::function<void(AVFrame*)> m_callback;
     const char* m_input_file_name;
 public:
-    CDecoder(const char*  input_file, CDecodeFrameCallback* callback);
+    CDecoder(const char*  input_file, std::function<void(AVFrame*)> callback);
     ~CDecoder();
     void start();
 };
