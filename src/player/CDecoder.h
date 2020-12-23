@@ -20,10 +20,12 @@ class CDecoder {
 private:
     std::function<void(AVFrame*)> m_callback;
     const char* m_input_file_name;
+    AVFrame* FINISH_FRAME;
 public:
     CDecoder(const char*  input_file, std::function<void(AVFrame*)> callback);
     ~CDecoder();
     void start();
+    bool is_finish_frame(AVFrame *frame);
 };
 
 

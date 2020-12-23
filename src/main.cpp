@@ -20,6 +20,5 @@ void callback(int i){
 int main(int argc, char** args){
     CPlayer player(INPUT_MP4_FILE);
     player.play();
-    getchar();
     return 0;
 }

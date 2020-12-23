@@ -5,6 +5,7 @@
 #include "CDecoder.h"
 
 CDecoder::CDecoder(const char *input_file, std::function<void(AVFrame*)> callback) {
+    this->FINISH_FRAME = av_frame_alloc();
     this->m_callback = callback;
     this->m_input_file_name = input_file;
 }
@@ -12,6 +13,7 @@ CDecoder::CDecoder(const char *input_file, std::function<void(AVFrame*)> callbac
 CDecoder::~CDecoder() {
     this->m_callback = nullptr;
     this->m_input_file_name = nullptr;
+    delete FINISH_FRAME;
 }
 
 void CDecoder::start() {
@@ -44,7 +46,6 @@ void CDecoder::start() {
     av_image_fill_arrays(yuv_frame->data, yuv_frame->linesize, out_buf,AV_PIX_FMT_YUV420P,video_param->width, video_param->height,1);
 
     av_init_packet(packet);
-    int frame_index = 0;
     while (av_read_frame(fmt_ctx, packet) == 0) {
         if (packet->stream_index == video_stream_index) {
             avcodec_send_packet(codec_ctx, packet);
@@ -57,6 +58,7 @@ void CDecoder::start() {
             }
         }
     }
+    this->m_callback(FINISH_FRAME);
 
     av_free(out_buf);
     sws_freeContext(swsContext);
@@ -65,4 +67,8 @@ void CDecoder::start() {
     av_packet_free(&packet);
     avcodec_free_context(&codec_ctx);
     avformat_close_input(&fmt_ctx);
+}
+
+bool CDecoder::is_finish_frame(AVFrame *frame) {
+    return frame == FINISH_FRAME;
 }
