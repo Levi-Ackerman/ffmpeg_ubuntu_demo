@@ -12,6 +12,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include/ffmpeg
         ${CMAKE_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/src)
 
+include_directories(${CMAKE_SOURCE_DIR}/src/handler)
+
 #add_library(avutil
 #        SHARED
 #        IMPORTED)
@@ -47,6 +49,8 @@ link_libraries(avutil avformat avcodec avfilter avdevice SDL2 swscale swresample
 FILE(GLOB SRC_C_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/sdl/*.c)
 
 FILE(GLOB SRC_CPP_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/player/*.cpp)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/handler)
 #
 #aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_DIR)
 #
@@ -57,3 +61,5 @@ FILE(GLOB SRC_CPP_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/src/pl
 #aux_source_directory(src ./src)
 
 add_executable(${PROJECT_NAME} ${SRC_C_FILES} ${SRC_CPP_FILES})
+
+target_link_libraries(${PROJECT_NAME} handler)
