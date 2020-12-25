@@ -5,12 +5,18 @@
 #ifndef CDEMO_CMESSAGE_H
 #define CDEMO_CMESSAGE_H
 #include <functional>
+#include "common.h"
 
 class CMessage {
 private:
-    std::function<void()>* m_callback = nullptr;
+    CALLBACK_FUNCTION  m_callback = nullptr;
 public:
-    static CMessage* obtain(std::function<void()>* callback);
+    int arg1;
+    int arg2;
+    void* obj;
+    int what;
+public:
+    static CMessage* obtain(CALLBACK_FUNCTION callback);
 
 public:
     void callback();

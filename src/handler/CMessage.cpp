@@ -4,7 +4,7 @@
 
 #include "CMessage.h"
 
-CMessage * CMessage::obtain(std::function<void()>* callback) {
+CMessage * CMessage::obtain(CALLBACK_FUNCTION callback) {
     auto message = new CMessage;
     message->m_callback = callback;
     return message;
@@ -12,6 +12,6 @@ CMessage * CMessage::obtain(std::function<void()>* callback) {
 
 void CMessage::callback() {
     if (m_callback != nullptr) {
-        (*this->m_callback)();
+        this->m_callback();
     }
 }

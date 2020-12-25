@@ -14,7 +14,7 @@
 class CLooper {
 public:
     static CLooper* get_main_loop();
-    static CLooper* my_looper();
+    static CLooper* get_my_looper();
 
     static void prepare();
     static void prepare_main_looper();
@@ -25,11 +25,11 @@ private:
     static CLooper* s_main_looper;
 
 private:
-    std::shared_ptr<BlockList<CMessage*>> m_msg_queue;
+    BlockList<CMessage*> m_msg_queue;
 public:
     CLooper();
     ~CLooper();
-
+    void enqueue(CMessage* msg);
 };
 
 

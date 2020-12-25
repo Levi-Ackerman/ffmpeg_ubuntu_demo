@@ -13,14 +13,14 @@ void CLooper::prepare_main_looper() {
 }
 
 CLooper::CLooper() {
-    m_msg_queue = std::make_shared<BlockList<CMessage*>>();
+
 }
 
 CLooper::~CLooper() {
 
 }
 
-CLooper * CLooper::my_looper() {
+CLooper * CLooper::get_my_looper() {
     return s_looper;
 }
 
@@ -29,9 +29,13 @@ void CLooper::prepare() {
 }
 
 void CLooper::loop() {
-    CLooper* me = my_looper();
+    CLooper* me = get_my_looper();
     while (true){
-        CMessage* msg = me->m_msg_queue->pop_front();
+        CMessage* msg = me->m_msg_queue.pop_front();
         msg->callback();
     }
+}
+
+void CLooper::enqueue(CMessage *msg) {
+    m_msg_queue.push_back(msg);
 }
