@@ -12,7 +12,6 @@ extern "C" {
 #include "libavutil/imgutils.h"
 #include "libavutil/rational.h"
 #include <cstdio>
-#include <ctime>
 #include <unistd.h>
 }
 
@@ -29,7 +28,7 @@ typedef std::unique_lock<std::mutex> u_lock;
 
 class CPlayer {
 private:
-    const int FRAME_CACHE_MAX_LENGTH = 1;
+    const int FRAME_CACHE_MAX_LENGTH = 16;
 private:
     const char *m_mp4_file;
     int m_width, m_height;

@@ -2,7 +2,6 @@
 #include "libavformat/avformat.h"
 #include "libavcodec/avcodec.h"
 #include "libavutil/avutil.h"
-#include "common.h"
 
 void video_cut(char *in_file, char *out_file, int from_second, int to_second) {
     av_register_all();
@@ -10,9 +9,6 @@ void video_cut(char *in_file, char *out_file, int from_second, int to_second) {
     int ret;
     AVPacket packet;
     ret = avformat_open_input(&in_ctx, in_file, NULL, NULL);
-    if (!check_print(ret, "open file error:%s\n")) {
-        goto __fail;
-    }
     avformat_find_stream_info(in_ctx, NULL);
     int video_index = av_find_best_stream(in_ctx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
 

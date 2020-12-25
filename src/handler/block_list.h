@@ -35,7 +35,7 @@ template<typename T>
 T BlockList<T>::pop_front() {
     std::unique_lock<std::mutex> lock(m_mutex);
     while (m_list_impl.empty()){
-        m_not_empty_cond.wait_for(lock,std::chrono::milliseconds(10));
+        m_not_empty_cond.wait(lock);
     }
     T elem = m_list_impl.front();
     m_list_impl.pop_front();
@@ -54,7 +54,7 @@ template<typename T>
 void BlockList<T>::push_back(T elem) {
     std::unique_lock<std::mutex> lock(m_mutex);
     while (m_list_impl.size() == m_max_size){
-        m_not_full_cond.wait_for(lock, std::chrono::milliseconds(10));
+        m_not_full_cond.wait(lock);
     }
     m_list_impl.push_back(elem);
     if (m_list_impl.size() == 1){

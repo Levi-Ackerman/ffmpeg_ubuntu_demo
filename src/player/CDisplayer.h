@@ -33,6 +33,8 @@ public:
 
     void update_frame(AVFrame* frame);
 
+    void present();
+
     void show_window();
 };
 

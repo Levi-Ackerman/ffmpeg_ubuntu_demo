@@ -3,6 +3,7 @@
 //
 
 #include "CLooper.h"
+#include "CHandler.h"
 
 thread_local CLooper* CLooper::s_looper = nullptr ;
 CLooper* CLooper::s_main_looper = nullptr;
@@ -32,7 +33,7 @@ void CLooper::loop() {
     CLooper* me = get_my_looper();
     while (true){
         CMessage* msg = me->m_msg_queue.pop_front();
-        msg->handler.
+        msg->handler->dispatch_message(msg);
         msg->callback();
     }
 }
