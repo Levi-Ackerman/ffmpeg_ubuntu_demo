@@ -20,7 +20,10 @@ CPlayer::CPlayer(const char *mp4_file) {
     this->m_time_base_d = av_q2d(video_stream->time_base);
     this->m_frame_interval_ms = 1000 / av_q2d(video_stream->avg_frame_rate);
     this->m_displayer = new CDisplayer;
-    this->m_displayer->init_window(m_width, m_height, [this] { m_running = false; });
+    this->m_displayer->init_window(m_width, m_height, [this] {
+        m_running = false;
+        exit(0);
+    });
     this->m_decoder = new CDecoder(mp4_file, &m_running, [this](AVFrame *frame, int index) {
         on_frame_decode(frame,
                         index);
