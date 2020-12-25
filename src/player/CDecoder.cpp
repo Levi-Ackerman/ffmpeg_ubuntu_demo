@@ -4,7 +4,7 @@
 
 #include "CDecoder.h"
 
-CDecoder::CDecoder(const char *input_file, std::atomic_bool *running, std::function<void(AVFrame*)> callback) {
+CDecoder::CDecoder(const char *input_file, std::atomic_bool *running, std::function<void(AVFrame*,int)> callback) {
     this->FINISH_FRAME = av_frame_alloc();
     this->m_callback = callback;
     this->m_input_file_name = input_file;
@@ -41,6 +41,7 @@ void CDecoder::start() {
                                 nullptr, nullptr, nullptr);
 
     av_init_packet(packet);
+    int index = 0;
     while (*m_running) {
         if (av_read_frame(fmt_ctx, packet) == 0) {
             if (packet->stream_index == video_stream_index) {
@@ -57,7 +58,7 @@ void CDecoder::start() {
                     int out_height = sws_scale(swsContext, frame->data, frame->linesize, 0, frame->height,
                                                yuv_frame->data, yuv_frame->linesize);
                     if (out_height > 0) {
-                        this->m_callback(yuv_frame);
+                        this->m_callback(yuv_frame,index++);
                     } else {
                         av_free(yuv_frame->data);
                         av_frame_free(&yuv_frame);
@@ -65,7 +66,7 @@ void CDecoder::start() {
                 }
             }
         }else{
-            this->m_callback(FINISH_FRAME);
+            this->m_callback(FINISH_FRAME, index++);
             break;
         }
     }

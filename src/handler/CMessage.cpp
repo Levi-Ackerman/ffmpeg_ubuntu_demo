@@ -10,8 +10,10 @@ CMessage * CMessage::obtain(CALLBACK_FUNCTION callback) {
     return message;
 }
 
-void CMessage::callback() {
+bool CMessage::callback() {
     if (m_callback != nullptr) {
         this->m_callback();
+        return true;
     }
+    return false;
 }

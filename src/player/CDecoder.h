@@ -19,12 +19,12 @@ extern "C"{
 
 class CDecoder {
 private:
-    std::function<void(AVFrame*)> m_callback;
+    std::function<void(AVFrame*,int)> m_callback;
     const char* m_input_file_name;
     AVFrame* FINISH_FRAME;
     std::atomic_bool* m_running;
 public:
-    CDecoder(const char*  input_file,std::atomic_bool *running,std::function<void(AVFrame*)> callback);
+    CDecoder(const char*  input_file,std::atomic_bool *running,std::function<void(AVFrame*,int)> callback);
     ~CDecoder();
     void start();
     bool is_finish_frame(AVFrame *frame);

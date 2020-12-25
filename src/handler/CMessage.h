@@ -6,7 +6,8 @@
 #define CDEMO_CMESSAGE_H
 #include <functional>
 #include "common.h"
-
+//#include "CHandler.h"
+class CHandler;
 class CMessage {
 private:
     CALLBACK_FUNCTION  m_callback = nullptr;
@@ -19,7 +20,8 @@ public:
     static CMessage* obtain(CALLBACK_FUNCTION callback);
 
 public:
-    void callback();
+    bool callback();
+    CHandler* handler = nullptr;
 };
 
 

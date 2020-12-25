@@ -32,6 +32,7 @@ void CLooper::loop() {
     CLooper* me = get_my_looper();
     while (true){
         CMessage* msg = me->m_msg_queue.pop_front();
+        msg->handler.
         msg->callback();
     }
 }
