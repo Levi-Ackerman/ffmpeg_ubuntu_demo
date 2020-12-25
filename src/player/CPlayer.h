@@ -23,6 +23,7 @@ extern "C" {
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include "block_list.h"
 
 typedef std::unique_lock<std::mutex> u_lock;
 
@@ -34,10 +35,7 @@ private:
     int m_width, m_height;
     double m_time_base_d; //双精度化的时间基
     double m_frame_interval_ms; //帧间间隔ms
-    std::list<AVFrame*> m_list_frame; //解码后的帧的缓存
-    std::mutex m_list_mutex; //访问帧缓存队列时加的锁
-    std::condition_variable m_list_not_empty_cond; //帧缓存变成非空的信号量（生产者发送）
-    std::condition_variable m_list_not_full_cond; //帧缓存变成非满的信号量（消费者发送）
+    std::shared_ptr<BlockList<AVFrame*>> m_list_frame; //解码后的帧的缓存
 
     std::atomic_bool m_running;
 private:
@@ -52,7 +50,7 @@ public:
 
     ~CPlayer();
 
-    void on_frame_decode(AVFrame *frame);
+    void on_frame_decode(AVFrame *frame, int i);
 
 
 };

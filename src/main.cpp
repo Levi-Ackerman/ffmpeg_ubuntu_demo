@@ -15,26 +15,12 @@
 
 #define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
 
-int count = 0;
-
-void callback(int i){
-    printf("start\n");
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-    printf("end\n");
-}
-
-class Test{
-public:
-    CMessage *msg ;
-};
-
 void main_init(){
-
+    CPlayer player(INPUT_MP4_FILE);
+    player.play();
 }
 
 int main(int argc, char** args){
-//    CPlayer player(INPUT_MP4_FILE);
-//    player.play();
     CLooper::prepare_main_looper();
     main_init();
     CLooper::loop();

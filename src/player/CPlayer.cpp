@@ -7,6 +7,7 @@
 #define log(...) printf(__VA_ARGS__)
 
 CPlayer::CPlayer(const char *mp4_file) {
+    this->m_list_frame = std::make_shared<BlockList<AVFrame*>>(FRAME_CACHE_MAX_LENGTH);
     this->m_mp4_file = mp4_file;
     AVFormatContext *ctx = nullptr;
     avformat_open_input(&ctx, mp4_file, nullptr, nullptr);
@@ -19,25 +20,16 @@ CPlayer::CPlayer(const char *mp4_file) {
     this->m_frame_interval_ms = 1000 / av_q2d(video_stream->avg_frame_rate);
     this->m_displayer = new CDisplayer;
     this->m_displayer->init_window(m_width, m_height, [this] { m_running = false; });
-    this->m_decoder = new CDecoder(mp4_file, &m_running, [this](AVFrame *frame) { on_frame_decode(frame); });
+    this->m_decoder = new CDecoder(mp4_file, &m_running, [this](AVFrame *frame,int index) {
+        on_frame_decode(frame,
+                        index); });
     avformat_close_input(&ctx);
 }
 
 
-void CPlayer::on_frame_decode(AVFrame *frame) {
-    printf("present time: %lfs\n", frame->pts * this->m_time_base_d);
-    while (true) {
-        u_lock lock(m_list_mutex); //抢到锁再访问缓存队列
-        if (m_list_frame.size() == FRAME_CACHE_MAX_LENGTH) {
-            lock.unlock();
-            std::this_thread::sleep_for(
-                    std::chrono::milliseconds((int64_t) (FRAME_CACHE_MAX_LENGTH / 2 * m_frame_interval_ms)));
-        } else {
-            m_list_frame.push_back(frame);
-            lock.unlock();
-            break;
-        }
-    }
+void CPlayer::on_frame_decode(AVFrame *frame, int index) {
+    printf("present time: %lfs, %d\n", frame->pts * this->m_time_base_d, index);
+    m_list_frame->push_back(frame);
 }
 
 CPlayer::~CPlayer() {
@@ -52,24 +44,17 @@ void CPlayer::play() {
     decode_thread.detach();
     const int64_t start_time_ms = 1000 * clock() / CLOCKS_PER_SEC;
     while (m_running) {
-        u_lock lock(m_list_mutex);
-        if (m_list_frame.empty()) {
-            lock.unlock();
-            std::this_thread::sleep_for(std::chrono::milliseconds((int64_t) (m_frame_interval_ms / 2)));
-        } else {
-            AVFrame *frame = m_list_frame.front();
-            m_list_frame.pop_front();
-            lock.unlock();
-            if (m_decoder->is_finish_frame(frame)) {
-                break;
-            }
-            const int64_t pts_ms = (int64_t) (frame->pts * this->m_time_base_d * 1000);
-            const int64_t pass_ms = 1000 * clock() / CLOCKS_PER_SEC - start_time_ms;
-            if (pts_ms > pass_ms) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(pts_ms - pass_ms));
-            }
-            m_displayer->update_frame(frame);
-            av_frame_free(&frame);
+        AVFrame *frame = m_list_frame->pop_front();
+        m_list_frame->pop_front();
+        if (m_decoder->is_finish_frame(frame)) {
+            break;
         }
+        const int64_t pts_ms = (int64_t) (frame->pts * this->m_time_base_d * 1000);
+        const int64_t pass_ms = 1000 * clock() / CLOCKS_PER_SEC - start_time_ms;
+        if (pts_ms > pass_ms) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(pts_ms - pass_ms));
+        }
+        m_displayer->update_frame(frame);
+        av_frame_free(&frame);
     }
 }
