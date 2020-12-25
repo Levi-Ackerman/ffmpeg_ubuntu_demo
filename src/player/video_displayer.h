@@ -3,8 +3,8 @@
 // 负责视频yuv帧的展示
 //
 
-#ifndef CDEMO_CDISPLAYER_H
-#define CDEMO_CDISPLAYER_H
+#ifndef CDEMO_VIDEO_DISPLAYER_H
+#define CDEMO_VIDEO_DISPLAYER_H
 
 extern "C" {
 #include "SDL2/SDL.h"
@@ -15,7 +15,7 @@ extern "C" {
 #include <functional>
 #include <thread>
 
-class CDisplayer {
+class VideoDisplayer {
 private:
     int m_width;
     int m_height;
@@ -25,9 +25,9 @@ private:
     SDL_Rect *m_rect;
     std::function<void()> m_func_close_event_callback;
 public:
-    CDisplayer();
+    VideoDisplayer();
 
-    ~CDisplayer();
+    ~VideoDisplayer();
 
     void init_window(int width, int height, std::function<void()>);
 
@@ -39,4 +39,4 @@ public:
 };
 
 
-#endif //CDEMO_CDISPLAYER_H
+#endif //CDEMO_VIDEO_DISPLAYER_H

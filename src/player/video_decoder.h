@@ -2,8 +2,8 @@
 // Created by lee on 2020/12/21.
 //
 
-#ifndef CDEMO_CDECODER_H
-#define CDEMO_CDECODER_H
+#ifndef CDEMO_VIDEO_DECODER_H
+#define CDEMO_VIDEO_DECODER_H
 
 extern "C"{
 #include "libavcodec/avcodec.h"
@@ -17,18 +17,18 @@ extern "C"{
 #include <functional>
 #include <atomic>
 
-class CDecoder {
+class VideoDecoder {
 private:
     std::function<void(AVFrame*,int)> m_callback;
     const char* m_input_file_name;
     AVFrame* FINISH_FRAME;
     std::atomic_bool* m_running;
 public:
-    CDecoder(const char*  input_file,std::atomic_bool *running,std::function<void(AVFrame*,int)> callback);
-    ~CDecoder();
+    VideoDecoder(const char*  input_file, std::atomic_bool *running, std::function<void(AVFrame*, int)> callback);
+    ~VideoDecoder();
     void start();
     bool is_finish_frame(AVFrame *frame);
 };
 
 
-#endif //CDEMO_CDECODER_H
+#endif //CDEMO_VIDEO_DECODER_H

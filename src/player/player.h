@@ -2,8 +2,8 @@
 // Created by lee on 2020/12/15.
 //
 
-#ifndef CDEMO_CPLAYER_H
-#define CDEMO_CPLAYER_H
+#ifndef CDEMO_PLAYER_H
+#define CDEMO_PLAYER_H
 extern "C" {
 #include "libavformat/avformat.h"
 #include "libavcodec/avcodec.h"
@@ -16,8 +16,8 @@ extern "C" {
 }
 
 #include <list>
-#include "CDisplayer.h"
-#include "CDecoder.h"
+#include "video_displayer.h"
+#include "video_decoder.h"
 #include <thread>
 #include <mutex>
 #include <condition_variable>
@@ -26,7 +26,7 @@ extern "C" {
 
 typedef std::unique_lock<std::mutex> u_lock;
 
-class CPlayer {
+class Player {
 private:
     const int FRAME_CACHE_MAX_LENGTH = 16;
 private:
@@ -38,16 +38,16 @@ private:
 
     std::atomic_bool m_running;
 private:
-    CDisplayer* m_displayer;
-    CDecoder* m_decoder;
+    VideoDisplayer* m_displayer;
+    VideoDecoder* m_decoder;
 
 
 public:
-    CPlayer(const char *mp4_file);
+    Player(const char *mp4_file);
 
     void play();
 
-    ~CPlayer();
+    ~Player();
 
     void on_frame_decode(AVFrame *frame, int i);
 
@@ -55,4 +55,4 @@ public:
 };
 
 
-#endif //CDEMO_CPLAYER_H
+#endif //CDEMO_PLAYER_H

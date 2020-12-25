@@ -2,22 +2,22 @@
 // Created by lee on 2020/12/21.
 //
 
-#include "CDecoder.h"
+#include "video_decoder.h"
 
-CDecoder::CDecoder(const char *input_file, std::atomic_bool *running, std::function<void(AVFrame*,int)> callback) {
+VideoDecoder::VideoDecoder(const char *input_file, std::atomic_bool *running, std::function<void(AVFrame*, int)> callback) {
     this->FINISH_FRAME = av_frame_alloc();
     this->m_callback = callback;
     this->m_input_file_name = input_file;
     this->m_running = running;
 }
 
-CDecoder::~CDecoder() {
+VideoDecoder::~VideoDecoder() {
     this->m_callback = nullptr;
     this->m_input_file_name = nullptr;
     delete FINISH_FRAME;
 }
 
-void CDecoder::start() {
+void VideoDecoder::start() {
     AVFormatContext *fmt_ctx = nullptr;
     AVCodecContext *codec_ctx = nullptr;
     AVPacket *packet = nullptr;
@@ -78,6 +78,6 @@ void CDecoder::start() {
     avformat_close_input(&fmt_ctx);
 }
 
-bool CDecoder::is_finish_frame(AVFrame *frame) {
+bool VideoDecoder::is_finish_frame(AVFrame *frame) {
     return frame == FINISH_FRAME;
 }

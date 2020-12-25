@@ -2,23 +2,23 @@
 // Created by lee on 2020/12/21.
 //
 
-#include "CDisplayer.h"
+#include "video_displayer.h"
 
-CDisplayer::CDisplayer() {
+VideoDisplayer::VideoDisplayer() {
     SDL_Init(SDL_INIT_VIDEO);
 }
 
-CDisplayer::~CDisplayer() {
+VideoDisplayer::~VideoDisplayer() {
     SDL_Quit();
 }
 
-void CDisplayer::update_frame(AVFrame* frame) {
+void VideoDisplayer::update_frame(AVFrame* frame) {
     SDL_UpdateTexture(this->m_texture, this->m_rect, frame->data[0], frame->linesize[0]);
     SDL_RenderClear(this->m_render);
     SDL_RenderCopy(this->m_render, this->m_texture,this->m_rect, nullptr);
 }
 
-void CDisplayer::show_window() {
+void VideoDisplayer::show_window() {
     SDL_ShowWindow(this->m_window);
     std::thread thread_event([this]{
         SDL_Event event;
@@ -33,7 +33,7 @@ void CDisplayer::show_window() {
     thread_event.detach();
 }
 
-void CDisplayer::init_window(int width, int height, std::function<void()> on_close_event_callback) {
+void VideoDisplayer::init_window(int width, int height, std::function<void()> on_close_event_callback) {
     this->m_width = width;
     this->m_height = height;
     this->m_window = SDL_CreateWindow("player", 0, 0, width, height, SDL_WINDOW_HIDDEN);
@@ -43,6 +43,6 @@ void CDisplayer::init_window(int width, int height, std::function<void()> on_clo
     this->m_func_close_event_callback = on_close_event_callback;
 }
 
-void CDisplayer::present() {
+void VideoDisplayer::present() {
     SDL_RenderPresent(this->m_render);
 }

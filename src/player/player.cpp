@@ -2,12 +2,12 @@
 // Created by lee on 2020/12/15.
 //
 
-#include "CPlayer.h"
+#include "player.h"
 #include "common.h"
 
 #define log(...) printf(__VA_ARGS__)
 
-CPlayer::CPlayer(const char *mp4_file) {
+Player::Player(const char *mp4_file) {
     this->m_list_frame = std::make_shared<BlockList<AVFrame *>>(FRAME_CACHE_MAX_LENGTH);
     this->m_mp4_file = mp4_file;
     AVFormatContext *ctx = nullptr;
@@ -19,12 +19,12 @@ CPlayer::CPlayer(const char *mp4_file) {
     this->m_height = video_parameters->height;
     this->m_time_base_d = av_q2d(video_stream->time_base);
     this->m_frame_interval_ms = 1000 / av_q2d(video_stream->avg_frame_rate);
-    this->m_displayer = new CDisplayer;
+    this->m_displayer = new VideoDisplayer;
     this->m_displayer->init_window(m_width, m_height, [this] {
         m_running = false;
         exit(0);
     });
-    this->m_decoder = new CDecoder(mp4_file, &m_running, [this](AVFrame *frame, int index) {
+    this->m_decoder = new VideoDecoder(mp4_file, &m_running, [this](AVFrame *frame, int index) {
         on_frame_decode(frame,
                         index);
     });
@@ -32,14 +32,14 @@ CPlayer::CPlayer(const char *mp4_file) {
 }
 
 
-void CPlayer::on_frame_decode(AVFrame *frame, int index) {
+void Player::on_frame_decode(AVFrame *frame, int index) {
     m_list_frame->push_back(frame);
 }
 
-CPlayer::~CPlayer() {
+Player::~Player() {
 }
 
-void CPlayer::play() {
+void Player::play() {
     this->m_displayer->show_window();
     this->m_running = true;
     std::thread decode_thread([this] {

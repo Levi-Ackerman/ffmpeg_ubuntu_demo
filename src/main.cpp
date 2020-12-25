@@ -2,9 +2,9 @@
 // Created by lee on 2020/12/11.
 //
 #include <iostream>
-#include "player/CPlayer.h"
-#include "player/CDecoder.h"
-#include "player/CDisplayer.h"
+#include "player/player.h"
+#include "player/video_decoder.h"
+#include "player/video_displayer.h"
 #include <thread>
 #include "CHandler.h"
 #include "handler/CLooper.h"
@@ -16,7 +16,7 @@
 #define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
 
 void main_init(){
-    CPlayer player(INPUT_MP4_FILE);
+    Player player(INPUT_MP4_FILE);
     player.play();
 }
 
