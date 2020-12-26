@@ -21,6 +21,7 @@ private:
 public:
     void push_back(T elem);
     T pop_front();
+    T poll_front();
     BlockList(int max_size = INT_MAX);
 //    ~BlockList();
     const int size();
@@ -60,6 +61,15 @@ void BlockList<T>::push_back(T elem) {
     if (m_list_impl.size() == 1){
         m_not_empty_cond.notify_one();
     }
+}
+
+template<typename T>
+T BlockList<T>::poll_front() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if (m_list_impl.empty()){
+        m_not_empty_cond.wait(lock);
+    }
+    return m_list_impl.front();
 }
 
 

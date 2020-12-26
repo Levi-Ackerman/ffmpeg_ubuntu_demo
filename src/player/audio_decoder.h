@@ -8,16 +8,16 @@
 #include <atomic>
 
 struct AVFrame;
+struct PCM;
 
 class AudioDecoder {
 private:
     const char* m_input_file_name;
-    std::function<void(uint8_t*, int)> m_callback;
+    std::function<void(PCM*)> m_callback;
     std::atomic_bool *m_running;
 public:
     void start();
-    AudioDecoder(const char* , std::atomic_bool*);
-    void set_callback(std::function<void(uint8_t*,int)>);
+    AudioDecoder(const char* , std::atomic_bool*,std::function<void(PCM*)>);
 };
 
 

@@ -23,6 +23,8 @@ extern "C" {
 #include <condition_variable>
 #include <atomic>
 #include "block_list.h"
+#include "audio_decoder.h"
+#include "audio_displayer.h"
 
 typedef std::unique_lock<std::mutex> u_lock;
 
@@ -38,8 +40,10 @@ private:
 
     std::atomic_bool m_running;
 private:
-    VideoDisplayer* m_displayer;
-    VideoDecoder* m_decoder;
+    VideoDisplayer* m_video_displayer;
+    AudioDisplayer* m_audio_displayer;
+    VideoDecoder* m_video_decoder;
+    AudioDecoder *m_audio_decoder;
 
 
 public:

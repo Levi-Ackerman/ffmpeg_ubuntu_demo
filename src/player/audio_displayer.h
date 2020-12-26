@@ -2,8 +2,8 @@
 // Created by lee on 2020/12/26.
 //
 
-#ifndef CDEMO_AUDIO_PLAYER_H
-#define CDEMO_AUDIO_PLAYER_H
+#ifndef CDEMO_AUDIO_DISPLAYER_H
+#define CDEMO_AUDIO_DISPLAYER_H
 
 #include <cstdint>
 #include "block_list.h"
@@ -11,22 +11,17 @@
 extern "C"{
 #include "SDL2/SDL_stdinc.h"
 };
-
-typedef struct PCM{
-    uint8_t * data;
-    int size;
-} PCM;
-
-class AudioPlayer {
+struct PCM;
+class AudioDisplayer {
 private:
     std::shared_ptr<BlockList<PCM*>> m_pcm_list;
 public:
-    AudioPlayer();
+    AudioDisplayer();
     void play();
+    static void sdl_audio_callback(void* userdata, uint8_t* stream, int len);
 
     void push_pcm(PCM*);
-    PCM * pop_front();
 };
 
 
-#endif //CDEMO_AUDIO_PLAYER_H
+#endif //CDEMO_AUDIO_DISPLAYER_H
