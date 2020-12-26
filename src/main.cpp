@@ -12,12 +12,19 @@
 #include "handler/block_list.h"
 #include <exception>
 #include "handler/CMessage.h"
+#include "player/audio_decoder.h"
+#include <atomic>
 
 #define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
 
 void main_init(){
-    Player player(INPUT_MP4_FILE);
-    player.play();
+//    Player player(INPUT_MP4_FILE);
+//    player.play();
+    auto decoder = new AudioDecoder(INPUT_MP4_FILE, new std::atomic_bool(true));
+    decoder->set_callback([](uint8_t* out_buf, int size){
+        printf("size %d\n", size);
+    });
+    decoder->start();
 }
 
 int main(int argc, char** args){
