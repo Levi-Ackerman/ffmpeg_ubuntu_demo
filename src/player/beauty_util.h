@@ -14,14 +14,11 @@ extern "C" {
 
 class BeautyUtil {
 public:
-    int beauty_yuv(AVFrame *in, AVFrame **out);
+    int beauty_yuv(AVFrame *in, AVFrame *out);
 
 private:
     void skinWhite(unsigned char *input, unsigned char *output, int width, int height, int channels);
 
-    void yuv2rgba(AVFrame* in, AVFrame** out);
-
-    void rgba2yuv(AVFrame *in, AVFrame **out);
 };
 
 #endif //CDEMO_BEAUTY_UTIL_H

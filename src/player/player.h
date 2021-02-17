@@ -13,6 +13,7 @@ extern "C" {
 #include "libavutil/rational.h"
 #include <cstdio>
 #include <unistd.h>
+#include <omp.h>
 }
 
 #include <list>

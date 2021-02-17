@@ -9,6 +9,7 @@
 #define log(...) printf(__VA_ARGS__)
 
 Player::Player(const char *mp4_file) {
+    omp_set_num_threads(4);
     this->m_list_frame = std::make_shared<BlockList<AVFrame *>>(FRAME_CACHE_MAX_LENGTH);
     this->m_mp4_file = mp4_file;
     AVFormatContext *ctx = nullptr;
@@ -31,7 +32,6 @@ Player::Player(const char *mp4_file) {
             printf("audio decode over \n");
         }else {
             int size = pcm->size;
-            printf("size %d\n", size);
             if (size > 0) {
                 this->m_audio_displayer->push_pcm(pcm);
             }
@@ -47,7 +47,7 @@ Player::Player(const char *mp4_file) {
 
 void Player::on_frame_decode(AVFrame *frame, int index) {
 //    AVFrame * outFrame;
-//    beautyUtil.beauty_yuv(frame,&outFrame);
+    beautyUtil.beauty_yuv(frame,frame);
 //    av_frame_free(&frame);
 //    outFrame = frame;
     m_list_frame->push_back(frame);
@@ -80,7 +80,11 @@ void Player::play() {
         const int64_t pts_us = (int64_t) (frame->pts * this->m_time_base_d * 1000000);
         const int64_t pass_us = current_usecond() - start_time_us;
         if (pts_us > pass_us) {
-            std::this_thread::sleep_for(std::chrono::microseconds(pts_us - pass_us));
+            const int64_t interval = pts_us - pass_us;
+            av_log(NULL, AV_LOG_DEBUG, "sleep %ld",interval);
+            std::this_thread::sleep_for(std::chrono::microseconds(interval));
+        }else{
+            av_log(NULL, AV_LOG_DEBUG, "need not sleep");
         }
         m_video_displayer->present();
         av_frame_free(&frame);

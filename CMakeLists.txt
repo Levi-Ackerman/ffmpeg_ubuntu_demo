@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 project(CDemo)
 
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS -std=c++11)
@@ -63,3 +64,11 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/handler)
 add_executable(${PROJECT_NAME} ${SRC_C_FILES} ${SRC_CPP_FILES})
 
 target_link_libraries(${PROJECT_NAME} handler)
+
+FIND_PACKAGE( OpenMP REQUIRED)
+if(OPENMP_FOUND)
+    message("OPENMP FOUND ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
