@@ -25,6 +25,7 @@ extern "C" {
 #include "block_list.h"
 #include "audio_decoder.h"
 #include "audio_displayer.h"
+#include "beauty_util.h"
 
 typedef std::unique_lock<std::mutex> u_lock;
 
@@ -44,6 +45,8 @@ private:
     AudioDisplayer* m_audio_displayer;
     VideoDecoder* m_video_decoder;
     AudioDecoder *m_audio_decoder;
+
+    BeautyUtil beautyUtil;
 
 
 public:

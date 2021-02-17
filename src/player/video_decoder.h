@@ -23,6 +23,7 @@ private:
     const char* m_input_file_name;
     AVFrame* FINISH_FRAME;
     std::atomic_bool* m_running;
+
 public:
     VideoDecoder(const char*  input_file, std::atomic_bool *running, std::function<void(AVFrame*, int)> callback);
     ~VideoDecoder();

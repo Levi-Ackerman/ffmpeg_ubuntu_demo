@@ -21,6 +21,7 @@
 
 
 void main_init() {
+    av_log_set_level(AV_LOG_DEBUG);
     Player player(INPUT_MP4_FILE);
     player.play();
 }

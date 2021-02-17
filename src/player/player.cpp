@@ -46,7 +46,11 @@ Player::Player(const char *mp4_file) {
 
 
 void Player::on_frame_decode(AVFrame *frame, int index) {
-    m_list_frame->push_back(frame);
+    AVFrame * outFrame;
+    beautyUtil.beauty_yuv(frame,&outFrame);
+    av_frame_free(&frame);
+//    outFrame = frame;
+    m_list_frame->push_back(outFrame);
 }
 
 Player::~Player() {

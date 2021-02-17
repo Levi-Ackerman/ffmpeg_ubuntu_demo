@@ -57,6 +57,8 @@ void VideoDecoder::start() {
                     av_frame_copy_props(yuv_frame, frame);
                     int out_height = sws_scale(swsContext, frame->data, frame->linesize, 0, frame->height,
                                                yuv_frame->data, yuv_frame->linesize);
+                    yuv_frame->width = frame->width;
+                    yuv_frame->height = frame->height;
                     if (out_height > 0) {
                         this->m_callback(yuv_frame,index++);
                     } else {
