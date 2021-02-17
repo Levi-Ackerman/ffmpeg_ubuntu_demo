@@ -4,6 +4,8 @@
 
 #include "video_decoder.h"
 
+static const AVPixelFormat OUT_FORMAT = AV_PIX_FMT_RGBA;
+
 VideoDecoder::VideoDecoder(const char *input_file, std::atomic_bool *running, std::function<void(AVFrame*, int)> callback) {
     this->FINISH_FRAME = av_frame_alloc();
     this->m_callback = callback;
@@ -37,7 +39,7 @@ void VideoDecoder::start() {
     packet = av_packet_alloc();
     frame = av_frame_alloc();
     swsContext = sws_getContext(video_param->width, video_param->height, codec_ctx->pix_fmt, video_param->width,
-                                video_param->height, AV_PIX_FMT_YUV420P, 0,
+                                video_param->height, OUT_FORMAT, 0,
                                 nullptr, nullptr, nullptr);
 
     av_init_packet(packet);
@@ -49,10 +51,10 @@ void VideoDecoder::start() {
                 if (avcodec_receive_frame(codec_ctx, frame) == 0) {
                     uint8_t *out_buf = (uint8_t *) av_malloc(
                             sizeof(uint8_t) *
-                            av_image_get_buffer_size(AV_PIX_FMT_YUV420P, video_param->width, video_param->height, 1));
+                            av_image_get_buffer_size(OUT_FORMAT, video_param->width, video_param->height, 1));
 
                     AVFrame *yuv_frame = av_frame_alloc();
-                    av_image_fill_arrays(yuv_frame->data, yuv_frame->linesize, out_buf, AV_PIX_FMT_YUV420P,
+                    av_image_fill_arrays(yuv_frame->data, yuv_frame->linesize, out_buf, OUT_FORMAT,
                                          video_param->width, video_param->height, 1);
                     av_frame_copy_props(yuv_frame, frame);
                     int out_height = sws_scale(swsContext, frame->data, frame->linesize, 0, frame->height,

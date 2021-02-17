@@ -38,7 +38,7 @@ void VideoDisplayer::init_window(int width, int height, std::function<void()> on
     this->m_height = height;
     this->m_window = SDL_CreateWindow("player", 0, 0, width, height, SDL_WINDOW_HIDDEN);
     this->m_render = SDL_CreateRenderer(m_window, -1, 0);
-    this->m_texture = SDL_CreateTexture(m_render, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, width, height);
+    this->m_texture = SDL_CreateTexture(m_render, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, width, height);
     this->m_rect = new SDL_Rect{0, 0, width, height};
     this->m_func_close_event_callback = on_close_event_callback;
 }
