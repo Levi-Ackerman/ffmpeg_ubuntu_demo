@@ -17,11 +17,15 @@
 #include <atomic>
 #include "player/pcm.h"
 
+#include <opencv2/core.hpp>
+
 //extern "C"{
 //#include "omp.h"
 //}
 
-#define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
+//#define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
+//#define INPUT_MP4_FILE      "/home/lee/mide-863-C.mp4"
+#define INPUT_MP4_FILE      "/home/lee/test3.mp4"
 
 
 void main_init() {
@@ -37,6 +41,7 @@ void testmp(){
 
 int main(int argc, char **args) {
 //    omp_set_num_threads(12);
+cv::Mat mat;
     CLooper::prepare_main_looper();
     main_init();
     CLooper::loop();

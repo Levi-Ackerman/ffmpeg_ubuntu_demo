@@ -4,9 +4,12 @@
 
 #include "beauty_util.h"
 #include <cmath>
-//#include <omp.h>
 #include "common.h"
 #include "WhiteTable.h"
+
+#ifndef ClampToByte
+#define  ClampToByte(v)  (((unsigned)(int)(v)) <(255) ? (v) : (v < 0) ? (0) : (255))
+#endif
 
 #ifndef min
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -16,31 +19,27 @@
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
-#ifndef ClampToByte
-#define  ClampToByte(v)  (((unsigned)(int)(v)) <(255) ? (v) : (v < 0) ? (0) : (255))
-#endif
-
 void skinSmoothing(unsigned char *input, unsigned char *output, int width, int height, int channels,
                    int smoothingLevel, int apply_skin_filter);
 
 int BeautyUtil::beauty_yuv(AVFrame *in, AVFrame *out) {
-    skinWhite(in->data[0], out->data[0], in->width, in->height, 4);
+    clock.update();
+//    skinWhite(in->data[0],out->data[0],in->width,in->height,4);
+//    skinSmoothing(in->data[0],out->data[0],in->width,in->height,4,15,0);
+    av_log(nullptr,AV_LOG_INFO, "cost time:%lfms\n",clock.getTimerMilliSec());
     return 0;
 }
 
-void BeautyUtil::skinWhite(uint8_t *input, uint8_t *output, int width, int height, int channels) {
-    if (input == NULL || output == NULL) {
-        return;
+void BeautyUtil::skinWhite(uint8_t *input, uint8_t *output, int width, int height, int channels){
+    if (input == NULL || output == NULL){
+        return ;
     }
-    clock.update();
     const int size = width * height * channels;
+    #pragma omp parallel for
     for (int i = 0; i < size; ++i) {
         output[i] = WhiteTable::getWhitePixelValue(input[i]);
     }
-    skinSmoothing(output, output, width, height, channels, 5, 0);
-    av_log(nullptr, AV_LOG_INFO, "handle beauty %lfms\n", clock.getTimerMilliSec());
 }
-
 
 unsigned int skinDetection(unsigned char *rgb_src, int width, int height, int channels) {
     int stride = width * channels;
@@ -227,7 +226,6 @@ void skinDenoise(unsigned char *input, unsigned char *output, int width, int hei
     if (rowPos) free(rowPos);
     if (colPos) free(colPos);
 }
-
 
 void skinSmoothing(unsigned char *input, unsigned char *output, int width, int height, int channels,
                    int smoothingLevel, int apply_skin_filter) {
