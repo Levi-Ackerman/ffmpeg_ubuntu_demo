@@ -17,9 +17,9 @@
 #include <atomic>
 #include "player/pcm.h"
 
-extern "C"{
-#include "omp.h"
-}
+//extern "C"{
+//#include "omp.h"
+//}
 
 #define INPUT_MP4_FILE      "../test_dir/marvel.mp4"
 
@@ -36,7 +36,7 @@ void testmp(){
 }
 
 int main(int argc, char **args) {
-    omp_set_num_threads(12);
+//    omp_set_num_threads(12);
     CLooper::prepare_main_looper();
     main_init();
     CLooper::loop();

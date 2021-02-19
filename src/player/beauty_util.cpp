@@ -4,7 +4,7 @@
 
 #include "beauty_util.h"
 #include <cmath>
-#include <omp.h>
+//#include <omp.h>
 #include "common.h"
 
 static const int beta = 5;
@@ -24,7 +24,6 @@ void BeautyUtil::skinWhite(uint8_t *input, uint8_t *output, int width, int heigh
     }
     const int64_t cur = current_millisecond();
     const int size = width * height * channels;
-    #pragma omp parallel for
     for (int i = 0; i < size; ++i) {
 //        for (int j = 0; j < height; ++j) {
 //            for (int k = 0; k < channels; ++k) {

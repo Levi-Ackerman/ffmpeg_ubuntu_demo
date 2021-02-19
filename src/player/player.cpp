@@ -9,7 +9,6 @@
 #define log(...) printf(__VA_ARGS__)
 
 Player::Player(const char *mp4_file) {
-    omp_set_num_threads(4);
     this->m_list_frame = std::make_shared<BlockList<AVFrame *>>(FRAME_CACHE_MAX_LENGTH);
     this->m_mp4_file = mp4_file;
     AVFormatContext *ctx = nullptr;
