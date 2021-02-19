@@ -11,6 +11,7 @@ extern "C" {
 #include "libswscale/swscale.h"
 #include "ffmpeg/libavutil/imgutils.h"
 };
+#include "TimeClock.h"
 
 class BeautyUtil {
 public:
@@ -18,7 +19,7 @@ public:
 
 private:
     void skinWhite(unsigned char *input, unsigned char *output, int width, int height, int channels);
-
+    TimerClock clock;
 };
 
 #endif //CDEMO_BEAUTY_UTIL_H
